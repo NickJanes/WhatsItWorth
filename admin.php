@@ -13,6 +13,7 @@ include_once('includes/header.php');
             <table class="table table-striped">
                 <thead>
                 <tr>
+                    <th>Username</th>
                     <th>Email</th>
                     <th>Registered</th>
                     <th>Promote/Demote</th>
@@ -21,17 +22,16 @@ include_once('includes/header.php');
                 <tbody>
                     <?php foreach (getAllUsers() as $user): ?>
                     <tr>
-                        <td><?php echo $user['email']; ?></td>
-                        <td><?php echo date('m/d/Y H:i:s', $user['datecreated']); ?></td>
-                        <td>
-                        <?php if (!isOwner($user['id'])): ?>
-                            <?php if ($user['role_id'] == 1): ?>
-                            <a href="procedures/adjustRole.php?role=demote&userId=<?php echo $user['id']; ?>" class="bt btn-xs btn-warning">Demote from Admin</a>
-                            <?php elseif ($user['role_id'] == 2): ?>
-                            <a href="procedures/adjustRole.php?role=promote&userId=<?php echo $user['id']; ?>" class="bt btn-xs btn-success">Promote to Admin</a>
-                            <?php endif; ?>
-                        <?php endif; ?>
-                        </td>
+                      <td><?php echo $user['username']; ?></td>
+                      <td><?php echo $user['email']; ?></td>
+                      <td><?php echo date('m/d/Y H:i:s', $user['datecreated']); ?></td>
+                      <td>
+                      <?php if ($user['role_id'] == 1): ?>
+                      <a href="procedures/adjustRole.php?role=demote&userId=<?php echo $user['id']; ?>" class="bt btn-xs btn-warning">Demote from Admin</a>
+                      <?php elseif ($user['role_id'] == 2): ?>
+                      <a href="procedures/adjustRole.php?role=promote&userId=<?php echo $user['id']; ?>" class="bt btn-xs btn-success">Promote to Admin</a>
+                      <?php endif; ?>
+                      </td>
                     </tr>
                     <?php endforeach; ?>
                 </tbody>

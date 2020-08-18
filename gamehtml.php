@@ -20,13 +20,18 @@ if(!empty($_GET['s'])) {
 
 foreach(get_games($q, $filter, $s) as $obj) {
   $information ="
-    <div class='Game d-flex flex-row' style='font-size: 18px;'>
-      <a class='d-flex mr-auto' style='display: inline-block;' href=game.php?gameid=" . $obj["steam_id"] . ">
-        <div class=''><img style='display: inline-block; width: 240px; height: 108px' src='img/header" . $obj["steam_id"] . ".jpg'></div>
-        <div class='p-2' style='font-size: 1.5em;'>" . $obj['name'] . "</div>
+    <div class='Game d-flex flex-row'>
+      <a class='d-flex mr-auto' href=game.php?gameid=" . $obj["steam_id"] . ">
+        <div class=''><img src='img/header" . $obj["steam_id"] . ".jpg'></div>
+        <div class='p-2' style='font-size: 1.5em; text-overflow:ellipsis;'>" . $obj['name'] . "</div>
       </a>
-      <div class='p-2'> Steam: $". (($obj['price'] > 0) ? substr_replace($obj['price'], ".", strlen($obj['price']) - 2, 0) : "0.00") . "</div>
-      <div class='p-2'> Value: $". (($obj['v'] > 0) ? (number_format((float)$obj['v'], 2, '.', '')) : "0.00") . " (" . $obj['submissions'] . ")</div>
+      <div>
+        <div class='m-2 d-flex pbtn'>
+          <div class='p-2'>$". (($obj['price'] > 0) ? substr_replace($obj['price'], ".", strlen($obj['price']) - 2, 0) : "0.00") . "</div>
+          <div class='p-1 m-1 purchase'>Purchase</div>
+        </div>
+        <div class='m-2 p-2 value'>$". (($obj['v'] > 0) ? (number_format((float)$obj['v'], 2, '.', '')) : "0.00") . " (" . $obj['submissions'] . ")</div>
+      </div>
     </div>";
   echo $information;
 }

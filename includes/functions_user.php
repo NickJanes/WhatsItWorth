@@ -29,8 +29,11 @@ function isAuthenticated() {
 }
 
 function requireAuth() {
+  global $session;
+
   if(!isAuthenticated()) {
     $accessToken = new Symfony\Component\HttpFoundation\Cookie('access_token', "Expired", time()-3600, '/', getenv('COOKIE_DOMAIN'));
+    $session->getFlashBag()->add('error', 'Not Logged In');
     redirect('login.php', ['cookies' => [$accessToken]]);
   }
 }
@@ -38,10 +41,7 @@ function requireAuth() {
 function requireAdmin() {
   global $session;
 
-  if(!isAuthenticated()) {
-    $accessToken = new Symfony\Component\HttpFoundation\Cookie('access_token', "Expired", time()-3600, '/', getenv('COOKIE_DOMAIN'));
-    redirect('login.php', ['cookies' => [$accessToken]]);
-  }
+  requireAuth();
   try {
     if(!decodeJwt('is_admin')) {
       $session->getFlashBag()->add('error', 'Not Authorized');
@@ -156,20 +156,6 @@ function updatePassword($password, $userId) {
   }
 
   return true;
-}
-
-function isOwner($ownerId) {
-    if (!isAuthenticated()) {
-        return false;
-    }
-
-    try {
-        $userId = decodeJwt('sub');
-    } catch (\Exception $e) {
-        return false;
-    }
-
-    return $ownerId == $userId;
 }
 
 function promote($userId) {

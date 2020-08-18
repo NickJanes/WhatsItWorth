@@ -25,5 +25,18 @@ if (!empty($user)) {
 
 $hashed = password_hash($password, PASSWORD_DEFAULT);
 $user = createUser($username, $email, $hashed);
-$session->getFlashBag()->add('success', 'User Added');
-redirect('../index.php');
+$expTime = time() + 3600;
+
+$jwt = \Firebase\JWT\JWT::encode([
+    'iss' => request()->getBaseUrl(),
+    'sub' => "{$user['id']}",
+    'exp' => $expTime,
+    'iat' => time(),
+    'nbf' => time(),
+    'is_admin' => $user['role_id'] == 1
+], getenv("SECRET_KEY"),'HS256');
+
+$accessToken = new Symfony\Component\HttpFoundation\Cookie('access_token', $jwt, $expTime, '/', getenv('COOKIE_DOMAIN'));
+
+$session->getFlashBag()->add('success', 'User Added and Successfully Logged In');
+redirect('../index.php',['cookies' => [$accessToken]]);

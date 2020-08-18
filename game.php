@@ -36,10 +36,12 @@ include_once("includes/header.php");?>
           <?php echo "Steam: $" . (($obj['price'] > 0) ? substr_replace($obj['price'], ".", strlen($obj['price']) - 2, 0) : "0.00"); ?>
           <?php echo (" Value: $" . (($value['v'] > 0) ? number_format((float)$value['v'], 2, '.', '') : "0.00") . " (" . $value['c'] . ")"); ?>
         </div>
+				<?php if (isAuthenticated()) : ?>
           <form method="post" action="<?=htmlspecialchars($_SERVER['PHP_SELF'] . '?gameid=' . $_GET['gameid']);?>">
-        		<input type="text" name="value" placeholder='$<?php echo(number_format((float)get_submitted_value($gameID, decodeJwt('sub')), 2, '.', ''))?>'>
+        		<input type="text" name="value" placeholder='$<?php echo(number_format((float)get_submitted_value($gameID, decodeJwt('sub')), 2, '.', ''));?>'>
         		<input type="submit"></input>
         	</form>
+				<?php endif; ?>
       </div>
     </div>
     <div class="col-md-6" style="text-align: justify;"><?php echo $obj['description']; ?></div>

@@ -2,7 +2,7 @@
 
 $pageTitle = "Home";
 
-$filter = $s = '';
+$filter = '';
 
 if(!empty($_GET['filter'])) {
 	$filter = filter_input(INPUT_GET, 'filter', FILTER_SANITIZE_STRING);
@@ -10,9 +10,7 @@ if(!empty($_GET['filter'])) {
 
 $filterArray = explode(":", $filter);
 
-if(!empty($_GET['s'])) {
-	$s = filter_input(INPUT_GET, 's', FILTER_SANITIZE_STRING);
-}
+
 
 require_once 'includes/bootstrap.php';
 include_once("includes/header.php");
@@ -23,7 +21,7 @@ include_once("includes/header.php");
 	<div class="search m-1">
 		<form method="get" action="index.php">
 			<div class="d-flex">
-		    <input class="ml-auto" oninput="updateResult(this.value)" style="border: 0px; border-bottom: 2px solid #ccc;" type="text" name="s" id="s" placeholder="Search Games" />
+		    <input class="ml-auto" style="border: 0px; border-bottom: 2px solid #ccc;" type="text" name="s" id="s" placeholder="Search Games" />
 				<select style="border: 0px; border-bottom: 2px solid #ccc;" name="filter" id="filter" />
 					<option value="">Select One</option>
 					<optgroup label="Price">
@@ -46,7 +44,6 @@ include_once("includes/header.php");
   </div>
 
 	<div id="resultsinfo" class="m-4" style="text-align: center;">
-		<?php if($s) {echo("Showing results for: <h3>" . $s . "</h3><a href=\"index.php\">Click here to clear filter.</a> ");} ?>
 	</div>
 
 	<div id="gamedata">
@@ -55,17 +52,30 @@ include_once("includes/header.php");
 
 	<script type="text/javascript">
 		var gameCount = 0;
-		function refreshSearch() {
+
+		$("#s").keyup(function() {
+			updateShownGames();
+		});
+
+		$('#filter').change(function(){
+			updateShownGames();
+		});
+
+		function updateShownGames() {
+			document.getElementById('gamedata').innerHTML = "";
+			document.getElementById('resultsinfo').innerHTML = 'Showing results for: <h3>' + $("#s").val() +  '</h3><a href=\"index.php\">Click here to clear filter.</a>';
+			gameCount = 0;
+			loadMoreData(true);
 
 		}
 
     $(window).scroll(function() {
         if($(window).scrollTop() + $(window).height() >= $(document).height()) {
-						loadMoreData(gameCount);
+						loadMoreData();
         }
     });
 
-    function loadMoreData(){
+    function loadMoreData(test){
 			var xhttp;
 		  xhttp = new XMLHttpRequest();
 		  xhttp.onreadystatechange = function() {
@@ -73,7 +83,7 @@ include_once("includes/header.php");
 		      document.getElementById("gamedata").innerHTML += this.responseText;
 		    }
 		  };
-		  xhttp.open("GET", "gamehtml.php?q="+gameCount+"&s=<?php echo($s);?>&filter=<?php echo($filter); ?>", true);
+			xhttp.open("GET", "gamehtml.php?q="+gameCount+"&s="+$("#s").val()+"&filter="+$('#filter').val(), true);
 		  xhttp.send();
 			gameCount += 12;
     }

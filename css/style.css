@@ -1,6 +1,7 @@
 html, body {
   font-family: 'Lato', 'Open Sans', sans-serif;
   min-height: 100vh;
+  background-color: #edeff0;
 }
 
 optgroup {
@@ -18,6 +19,30 @@ input:focus, textarea:focus, select:focus {
 .Game {
   font-weight: 900;
   margin-bottom: 10px;
+  border-radius: 10px;
+  border-top-left-radius: 100px;
+  border-bottom-left-radius: 100px;
+  padding: 10px;
+}
+
+.Game img {
+  display: inline-block;
+  width: 240px;
+  height: 108px;
+  border-radius: 100px;
+}
+
+.Game .purchase {
+  background-color: #0ECF5B;
+  border-radius: 4px;
+}
+
+.Game .value {
+  background-color: #FFAE2B;
+  border-radius: 4px;
+}
+.Game .pbtn {
+  background-color: #aaa;
   border-radius: 4px;
 }
 
